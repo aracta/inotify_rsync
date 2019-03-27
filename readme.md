@@ -2,16 +2,16 @@
 我们一般采用rsync+inotify实现两台服务器之间文件自动同步。然而，当前网上众多的使用该方案的教程其实隐含了许多的坑，比如对于文件修改较为频繁的情况下，使用了rsync的全量或递归参数(-a或-r)会导致同步性能急剧下降。网上也有针对此情况的优化方案，例如这篇文章[《真正的inotify+rsync实时同步 彻底告别同步慢》](http://www.ttlsa.com/web/let-infotify-rsync-fast/)，该方案通过对监控到的变动事件进行区分处理，从而规避了rsync的递归扫描，并结合每2小时一次的全量定时同步，从而实现所谓的“实时同步”。然而该方案仍有一定的不完美之处，即，当某一短时间段内发生较多的文件变动时（例如通过FTP对某一目录大批量上传了图片等），rsync会在短时间内频繁启动，从而造成CPU消耗巨大。为处理该问题，本项目结合实际需求，引入了“防抖操作”概念，即增加了 1 分钟的定时任务方案，从而“优雅”地解决了该问题。本项目的同步方案为 1 分钟的延迟同步，所以不能接受这较大尺度的延迟的开发者需注意此问题。
 # 开发步骤
 本方案的开发者需掌握rsync、inotify的相关原理及配置知识。
-## 一、设置 rsync 相关同步项目、密码
+## 一、在备机上设置 rsync 相关同步项目、密码
 ```
 vi /usr/local/inotify_rsync/rsyncd.conf
 ```  
 具体项目配置请参考rsync相关教程，在此不赘述。
-## 二、以 daemon 方式启动 rsync 服务端：
+## 二、在备机以 daemon 方式启动 rsync 服务：
 ```
 rsync --daemon --config=/usr/local/inotify_rsync/rsyncd.conf
 ```
-## 三、inotifywait后台监控文件变更：
+## 三、在主机上，inotifywait后台监控文件变更：
 ### 1、先确认 inotify-tools 工具是否已安装，使用如下命令：
 ```rpm -qa inotify-tools```  
 也可以通过查询 inotifywait 所在的目录：  
