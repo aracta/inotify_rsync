@@ -8,7 +8,7 @@
 vi /usr/local/inotify_rsync/rsyncd.conf
 ```  
 具体项目配置请参考rsync相关教程，在此不赘述。
-## 二、在备机以 daemon 方式启动 rsync 服务：
+## 二、在备机以 daemon 方式启动 rsync 服务（可自行加入开机启动）：
 ```
 rsync --daemon --config=/usr/local/inotify_rsync/rsyncd.conf
 ```

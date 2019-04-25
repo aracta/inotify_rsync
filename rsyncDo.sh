@@ -14,7 +14,7 @@ do
 	#注意rsync不要使用-r参数，避免发生递归，影响效率
 	#rsync -PdztopgDl --delete ${SRC_DIR}${DERECTORY} ${DERECTORY} 2>> $ERR_LOG #错误重定向
 	#2018-10-25 去掉了-opg 选项
-	rsync -PdztDl --delete --exclude="Html" --exclude="PDF" --exclude="Runtime" --exclude="*.log" --exclude="*.shtml" --exclude=".ftpquota" --exclude=".svn" --exclude=".well-known" --password-file=/usr/local/inotify_rsync/user.pwd ${SRC_DIR}${DERECTORY} rsync://rsync_user@192.168.1.100/rsync_module${DERECTORY}
+	rsync -PdztDl --delete --exclude="Html" --exclude="PDF" --exclude="Runtime" --exclude="*.log" --exclude="*.shtml" --exclude=".ftpquota" --exclude=".svn" --exclude=".well-known" --password-file=/usr/local/inotify_rsync/user.pwd ${SRC_DIR}${DERECTORY} rsync://rsync_user@192.168.1.100/rsync_module${DERECTORY} 2>> ${ERR_LOG}
 done
 #清空$I_DIR_LOG  rsyncTask.id
 > ${I_DIR_LOG}
